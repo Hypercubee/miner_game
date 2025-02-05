@@ -104,7 +104,7 @@ void cameraMove(Vector2* camera){
     }
     if(IsKeyDown(KEY_S)){
         camera->y += 1;
-    }    
+    }
 }
 
 void drawWorld(World w, Vector2 cam, double zoom){
@@ -166,6 +166,6 @@ int main(void){
     }
 
     CloseWindow();
-    //free(gameWorld.data);
+    free(gameWorld.data);
     return 0;
 }
