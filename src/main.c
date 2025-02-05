@@ -29,7 +29,7 @@ Color colors[] = {
 
 
 void drawWorld(World w, Vector2 cam, double zoom){
-    const int cellsize = 69 * zoom;
+    const int cellsize = 50 * zoom;
     const int WINDOW_WIDTH = GetRenderWidth();
     const int WINDOW_HEIGHT = GetRenderHeight();
     int drawcountw = WINDOW_WIDTH / cellsize + 2;
