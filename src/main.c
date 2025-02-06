@@ -92,37 +92,82 @@ typedef struct{
     u8 dir;
 } Miner;
 
-void cameraMove(Vector2* camera){
-    if(IsKeyDown(KEY_A)){
-        camera->x -= 1;
-    }
-    if(IsKeyDown(KEY_D)){
-        camera->x += 1;
-    }
+void minerMove(Miner* m){
     if(IsKeyDown(KEY_W)){
-        camera->y -= 1;
+        m->pos.y -= 1;
     }
     if(IsKeyDown(KEY_S)){
-        camera->y += 1;
+        m->pos.y += 1;
+    }
+    if(IsKeyDown(KEY_A)){
+        m->pos.x -= 1;
+    }
+    if(IsKeyDown(KEY_D)){
+        m->pos.x += 1;
     }
 }
 
-void drawWorld(World w, Vector2 cam, double zoom){
-    const int cellsize = 50 * zoom;
-    const int WINDOW_WIDTH = GetRenderWidth();
-    const int WINDOW_HEIGHT = GetRenderHeight();
-    int drawcountw = WINDOW_WIDTH / cellsize + 2;
-    int drawcounth = WINDOW_HEIGHT / cellsize + 2;
+void cameraMove(Vector2* camera){
+    if(IsKeyDown(KEY_UP)){
+        camera->y -= 1;
+    }
+    if(IsKeyDown(KEY_DOWN)){
+        camera->y += 1;
+    }
+    if(IsKeyDown(KEY_LEFT)){
+        camera->x -= 1;
+    }
+    if(IsKeyDown(KEY_RIGHT)){
+        camera->x += 1;
+    }
+}
+
+void updateZoom(double *zoom){
+    double zoomSpeed = 0.02;
+    if(IsKeyDown(KEY_KP_ADD)){
+        *zoom *= 1 + zoomSpeed;
+    }
+    if(IsKeyDown(KEY_KP_SUBTRACT)){
+        *zoom *= 1 - zoomSpeed;
+    }
+    if(*zoom < 0.5) *zoom = 0.5;
+    if(*zoom > 2) *zoom = 2;
+}
+
+void getPosOnScreen(int windowWidth, int windowHeight, int cellsize, Vector2 cam, int worldx, int worldy, int* outx, int* outy){
+    *outx = (cellsize*(2*worldx - 1 - 2*cam.x) + windowWidth)/2;
+    *outy = (cellsize*(2*worldy - 1 - 2*cam.y) + windowHeight)/2;
+}
+
+void drawTerrain(World world, int windowWidth, int windowHeight, Vector2 cam, int cellsize){
+    int drawcountw = windowWidth / cellsize + 2;
+    int drawcounth = windowHeight / cellsize + 2;
     for(int y = cam.y - drawcounth/2; y < drawcounth + cam.y; y++){
         for(int x = cam.x - drawcountw/2; x < drawcountw + cam.x; x++){
-            if(x < 0 || x >= w.width || y < 0 || y >= w.height) continue;
-            int posx = x*cellsize - cam.x*cellsize + WINDOW_WIDTH/2 - cellsize/2;
-            int posy = y*cellsize - cam.y*cellsize + WINDOW_HEIGHT/2 - cellsize/2;
-            Color c = getOreColor(worldAt(w, x, y));
+            if(x < 0 || x >= world.width || y < 0 || y >= world.height) continue;
+            int posx = (cellsize*(2*x - 1 - 2*cam.x) + windowWidth)/2;
+            int posy = (cellsize*(2*y - 1 - 2*cam.y) + windowHeight)/2;
+            Color c = getOreColor(worldAt(world, x, y));
             DrawRectangle(posx, posy, cellsize, cellsize, c);
         }
     }
 }
+
+void drawMiner(int windowWidth, int windowHeight, Miner m, Vector2 cam, int cellsize){
+    int posx;
+    int posy;
+    getPosOnScreen(windowWidth, windowHeight, cellsize, cam, m.pos.x, m.pos.y, &posx, &posy);
+    DrawRectangle(posx, posy, cellsize, cellsize, WHITE);
+}
+
+void drawWorld(World w, Miner m, Vector2 cam, double zoom){
+    const int WINDOW_WIDTH = GetRenderWidth();
+    const int WINDOW_HEIGHT = GetRenderHeight();
+    const int cellsize = 50 * zoom;
+    drawTerrain(w, WINDOW_WIDTH, WINDOW_HEIGHT, cam, cellsize);
+    drawMiner(WINDOW_WIDTH, WINDOW_HEIGHT, m, cam, cellsize);
+}
+
 
 
 int main(void){
@@ -141,7 +186,10 @@ int main(void){
     InitWindow(800, 600, "miner");
     SetTargetFPS(60);
 
-
+    Miner miner = {
+        .pos = (Vector2) {3, 3},
+        .dir = 0,
+    };
 
     Vector2 camera = {0, 0};
     double zoom = 2.5;
@@ -151,15 +199,10 @@ int main(void){
         ClearBackground(BLACK);
 
         cameraMove(&camera);
+        minerMove(&miner);
+        updateZoom(&zoom);
 
-        if(IsKeyDown(KEY_KP_ADD)){
-            zoom *= 1.01;
-        }
-        if(IsKeyDown(KEY_KP_SUBTRACT)){
-            zoom *= 0.99;
-        }
-
-        drawWorld(gameWorld, camera, zoom);
+        drawWorld(gameWorld, miner, camera, zoom);
         DrawLine(0, 0, 800, 600, WHITE);
         DrawLine(800, 0, 0, 600, WHITE);
         EndDrawing();
