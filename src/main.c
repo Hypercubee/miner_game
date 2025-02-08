@@ -56,9 +56,9 @@ void minerMove(World w, Miner* m){
             m->cam.pos.x += dirx;
             m->cam.pos.y += diry;
             worldAt(w, (int)m->pos.x, (int)m->pos.y) = ORE_AIR;
-        }
-        if(ore > ORE_DIRT){
-            printf("pos x: %d, pos y: %d, mined: %d\n", (int)m->pos.x, (int)m->pos.y, (int) ore);
+            if(ore > ORE_DIRT){
+                printf("pos x: %d, pos y: %d, mined: %d\n", (int)m->pos.x, (int)m->pos.y, (int) ore);
+            }
         }
     }
 }
