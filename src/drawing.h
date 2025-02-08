@@ -20,18 +20,17 @@ void drawTerrain(World world, int windowWidth, int windowHeight, Vector2 cam, in
     }
 }
 
-void drawMiner(int windowWidth, int windowHeight, Miner m, Vector2 cam, int cellsize){
-    int posx;
-    int posy;
-    getPosOnScreen(windowWidth, windowHeight, cellsize, cam, m.pos.x, m.pos.y, &posx, &posy);
+void drawMiner(int windowWidth, int windowHeight, Miner m, int cellsize){
+    int posx; int posy;
+    getPosOnScreen(windowWidth, windowHeight, cellsize, m.cam.pos, m.pos.x, m.pos.y, &posx, &posy);
     DrawRectangle(posx+cellsize*0.2, posy+cellsize*0.2, cellsize*0.6, cellsize*0.6, WHITE);
 }
 
-void drawWorld(World w, Miner m, Vector2 cam, double zoom){
+void drawWorld(World w, Miner m){
     const int WINDOW_WIDTH = GetRenderWidth();
     const int WINDOW_HEIGHT = GetRenderHeight();
-    const int cellsize = 50 * zoom;
-    drawTerrain(w, WINDOW_WIDTH, WINDOW_HEIGHT, cam, cellsize);
-    drawMiner(WINDOW_WIDTH, WINDOW_HEIGHT, m, cam, cellsize);
+    const int cellsize = 50 * m.cam.zoom;
+    drawTerrain(w, WINDOW_WIDTH, WINDOW_HEIGHT, m.cam.pos, cellsize);
+    drawMiner(WINDOW_WIDTH, WINDOW_HEIGHT, m, cellsize);
 }
 #endif // MINER_DRAWING_H

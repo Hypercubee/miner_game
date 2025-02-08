@@ -20,6 +20,12 @@ typedef long i64;
 
 typedef struct{
     Vector2 pos;
+    double zoom;
+} MinerCamera;
+
+typedef struct{
+    Vector2 pos;
+    MinerCamera cam;
     u8 dir;
 } Miner;
 
@@ -42,31 +48,31 @@ void minerMove(Miner* m){
     }
 }
 
-void cameraMove(Vector2* camera){
+void cameraMove(Miner* m){
     if(IsKeyDown(KEY_UP)){
-        camera->y -= 1;
+        m->cam.pos.y -= 1;
     }
     if(IsKeyDown(KEY_DOWN)){
-        camera->y += 1;
+        m->cam.pos.y += 1;
     }
     if(IsKeyDown(KEY_LEFT)){
-        camera->x -= 1;
+        m->cam.pos.x -= 1;
     }
     if(IsKeyDown(KEY_RIGHT)){
-        camera->x += 1;
+        m->cam.pos.x += 1;
     }
 }
 
-void updateZoom(double *zoom){
+void updateZoom(Miner* m){
     double zoomSpeed = 0.02;
     if(IsKeyDown(KEY_KP_ADD)){
-        *zoom *= 1 + zoomSpeed;
+        m->cam.zoom *= 1 + zoomSpeed;
     }
     if(IsKeyDown(KEY_KP_SUBTRACT)){
-        *zoom *= 1 - zoomSpeed;
+        m->cam.zoom *= 1 - zoomSpeed;
     }
-    if(*zoom < 0.5) *zoom = 0.5;
-    if(*zoom > 2) *zoom = 2;
+    if(m->cam.zoom < 0.5) m->cam.zoom = 0.5;
+    if(m->cam.zoom > 2) m->cam.zoom = 2;
 }
 
 
@@ -90,21 +96,22 @@ int main(void){
 
     Miner miner = {
         .pos = (Vector2) {50, 0},
+        .cam = (MinerCamera) {
+            .pos = (Vector2) {50, 0},
+            .zoom = 1
+        },
         .dir = 0,
     };
-
-    Vector2 camera = {0, 0};
-    double zoom = 2.5;
 
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
 
-        cameraMove(&camera);
         minerMove(&miner);
-        updateZoom(&zoom);
+        cameraMove(&miner);
+        updateZoom(&miner);
 
-        drawWorld(gameWorld, miner, camera, zoom);
+        drawWorld(gameWorld, miner);
         DrawLine(0, 0, 800, 600, WHITE);
         DrawLine(800, 0, 0, 600, WHITE);
         EndDrawing();
