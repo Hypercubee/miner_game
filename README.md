@@ -1,10 +1,26 @@
 # simple miner game
 
-# build
+## build
 ```sh
 make
 ```
-# run
+## run
 ```sh
 ./main
+```
+## controls
+### miner movement
+```
+    w
+ a  s  d
+```
+### camera movement
+```
+    ↑
+ ←  ↓  →
+```
+### camera zoom 
+```
+numpad + 
+numpad -
 ```
