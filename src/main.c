@@ -27,24 +27,39 @@ typedef struct{
     Vector2 pos;
     MinerCamera cam;
     u8 dir;
+    Ores max_tier;
 } Miner;
 
 #include "drawing.h"
 
 
 
-void minerMove(Miner* m){
+void minerMove(World w, Miner* m){
+    i8 dirx = 0;
+    i8 diry = 0;
+
     if(IsKeyPressed(KEY_W)){
-        m->pos.y -= 1;
+        diry = -1;
+    } else if(IsKeyPressed(KEY_S)){
+        diry = 1;
+    } else if(IsKeyPressed(KEY_A)){
+        dirx = -1;
+    } else if(IsKeyPressed(KEY_D)){
+        dirx = 1;
     }
-    if(IsKeyPressed(KEY_S)){
-        m->pos.y += 1;
-    }
-    if(IsKeyPressed(KEY_A)){
-        m->pos.x -= 1;
-    }
-    if(IsKeyPressed(KEY_D)){
-        m->pos.x += 1;
+    if(dirx == 0 && diry == 0) return;
+    if(m->pos.x + dirx >= 0 && m->pos.x + dirx < w.width && m->pos.y + diry >= 0 && m->pos.y + diry < w.height){
+        u8 ore = worldAt(w, (int)m->pos.x+dirx, (int)m->pos.y+diry);
+        if(ore <= m->max_tier){
+            m->pos.x += dirx;
+            m->pos.y += diry;
+            m->cam.pos.x += dirx;
+            m->cam.pos.y += diry;
+            worldAt(w, (int)m->pos.x, (int)m->pos.y) = ORE_AIR;
+        }
+        if(ore > ORE_DIRT){
+            printf("pos x: %d, pos y: %d, mined: %d\n", (int)m->pos.x, (int)m->pos.y, (int) ore);
+        }
     }
 }
 
@@ -101,13 +116,14 @@ int main(void){
             .zoom = 1
         },
         .dir = 0,
+        .max_tier = ORE_COAL
     };
 
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
 
-        minerMove(&miner);
+        minerMove(gameWorld, &miner);
         cameraMove(&miner);
         updateZoom(&miner);
 
