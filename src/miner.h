@@ -66,7 +66,7 @@ void updateZoom(Miner* m){
     if(IsKeyDown(KEY_KP_SUBTRACT)){
         m->cam.zoom *= 1 - zoomSpeed;
     }
-    if(m->cam.zoom < 0.5) m->cam.zoom = 0.5;
+    if(m->cam.zoom < 0.4) m->cam.zoom = 0.4;
     if(m->cam.zoom > 2) m->cam.zoom = 2;
 }
 
