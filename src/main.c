@@ -13,19 +13,18 @@
 
 #include "drawing.h"
 
-
 World initWorld(int seed){
     World gameWorld = {0};
-    gameWorld.width = 500;
-    gameWorld.height = 500;
+    gameWorld.width = 512;
+    gameWorld.height = 512;
     gameWorld.data = malloc(gameWorld.width * gameWorld.height);
     if(gameWorld.data == NULL){
         fprintf(stderr, "failed to allocate memory for world");
         return (World){0};
     }
 
-    SetRandomSeed(seed);
-    genOres(gameWorld);
+    genOres(gameWorld, seed);
+
     return gameWorld;
 }
 
@@ -57,7 +56,7 @@ int main(void){
     SetTraceLogLevel(LOG_WARNING);
     InitWindow(800, 600, "miner");
     SetTargetFPS(60);
-
+    SetExitKey(0);
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
