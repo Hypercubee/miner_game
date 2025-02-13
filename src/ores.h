@@ -9,7 +9,8 @@ typedef enum{
     ORE_COPPER,
     ORE_SILVER,
     ORE_GOLD,
-    ORE_BEDROCK
+    ORE_BEDROCK,
+    ORE_UNDISCOVERED,
 } Ores;
 
 
@@ -38,6 +39,9 @@ Color getOreColor(Ores ore){
         break;
     case ORE_BEDROCK:
         return (Color){5, 5, 5, 255};
+        break;
+    case ORE_UNDISCOVERED:
+        return (Color){0, 0, 0, 255};
         break;
     default:
         assert(0 && "ores color not implemented");
