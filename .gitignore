@@ -2,3 +2,5 @@ TAGS
 main
 *.o
 *~
+*.save
+saves/

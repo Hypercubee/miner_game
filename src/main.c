@@ -39,6 +39,37 @@ void update(World w, Miner *m){
 }
 
 
+void saveWorld(const char* savename, World world){
+    assert(0 && "TODO: implement saving miner state");
+    FILE *fp = fopen(savename, "w");
+    // save world into file
+    fwrite(&world.width,  sizeof(int), 1, fp);
+    fwrite(&world.height, sizeof(int), 1, fp);
+    fwrite(world.data, sizeof(unsigned char), world.width * world.height, fp);
+    // save miner
+    fclose(fp);
+}
+
+World loadWorld(const char* savename){
+    assert(0 && "TODO: implement loading miner state");
+    World world = {0};
+    FILE *fp = fopen(savename, "r");
+    // load world from file
+    fread(&world.width, sizeof(int), 1, fp);
+    fread(&world.height, sizeof(int), 1, fp);
+    world.data = malloc(world.width * world.height);
+    if(world.data == NULL){
+        fprintf(stderr, "failed to allocate memory for world");
+        return (World){0};
+    }
+    fread(world.data, sizeof(unsigned char), world.width * world.height, fp);
+    // load miner
+    fclose(fp);
+    return world;
+}
+
+
+
 int main(void){
     World gameWorld = initWorld();
     Miner miner = {
@@ -66,6 +97,17 @@ int main(void){
         DrawLine(0, 0, 800, 600, WHITE);
         DrawLine(800, 0, 0, 600, WHITE);
         EndDrawing();
+
+        if(IsKeyPressed(KEY_K)){
+            printf("world saved\n");
+            saveWorld("first.save", gameWorld);
+        }
+
+        if(IsKeyPressed(KEY_L)){
+            printf("world loaded\n");
+            uninitWorld(gameWorld);
+            gameWorld = loadWorld("first.save");
+        }
     }
 
     CloseWindow();
