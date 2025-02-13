@@ -4,3 +4,4 @@ main
 *~
 *.save
 saves/
+*libraylib.so*
