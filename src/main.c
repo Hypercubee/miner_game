@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <errno.h>
+#include <string.h>
 //#include <raylib.h>
 #include "../lib/raylib.h" // for autocomplete to recognise the .h
 
@@ -34,38 +36,43 @@ void update(World w, Miner *m){
     minerMove(w, m);
     cameraMove(m);
     updateZoom(m);
-
     drawWorld(w, *m);
 }
 
 
-void saveWorld(const char* savename, World world){
-    assert(0 && "TODO: implement saving miner state");
+void saveWorld(const char* savename, World world, Miner miner){
     FILE *fp = fopen(savename, "w");
+    if(fp == NULL) {
+        printf("failed to open save file: %s", strerror(errno));
+        return;
+    }
     // save world into file
     fwrite(&world.width,  sizeof(int), 1, fp);
     fwrite(&world.height, sizeof(int), 1, fp);
     fwrite(world.data, sizeof(unsigned char), world.width * world.height, fp);
     // save miner
+    fwrite(&miner,  sizeof(Miner), 1, fp);
     fclose(fp);
 }
 
-World loadWorld(const char* savename){
-    assert(0 && "TODO: implement loading miner state");
-    World world = {0};
+void loadWorld(const char *savename, World *world_ptr, Miner *miner_ptr){
     FILE *fp = fopen(savename, "r");
-    // load world from file
-    fread(&world.width, sizeof(int), 1, fp);
-    fread(&world.height, sizeof(int), 1, fp);
-    world.data = malloc(world.width * world.height);
-    if(world.data == NULL){
-        fprintf(stderr, "failed to allocate memory for world");
-        return (World){0};
+    if(fp == NULL) {
+        printf("failed to open save file: %s", strerror(errno));
+        return;
     }
-    fread(world.data, sizeof(unsigned char), world.width * world.height, fp);
+    // load world from file
+    fread(&world_ptr->width, sizeof(int), 1, fp);
+    fread(&world_ptr->height, sizeof(int), 1, fp);
+    world_ptr->data = malloc(world_ptr->width * world_ptr->height);
+    if(world_ptr->data == NULL){
+        fprintf(stderr, "failed to allocate memory for world");
+        return;
+    }
+    fread(world_ptr->data, sizeof(unsigned char), world_ptr->width * world_ptr->height, fp);
     // load miner
+    fread(miner_ptr, sizeof(Miner), 1, fp);
     fclose(fp);
-    return world;
 }
 
 
@@ -100,13 +107,13 @@ int main(void){
 
         if(IsKeyPressed(KEY_K)){
             printf("world saved\n");
-            saveWorld("first.save", gameWorld);
+            saveWorld("saves/first.save", gameWorld, miner);
         }
 
         if(IsKeyPressed(KEY_L)){
             printf("world loaded\n");
             uninitWorld(gameWorld);
-            gameWorld = loadWorld("first.save");
+            loadWorld("saves/first.save", &gameWorld, &miner);
         }
     }
 
