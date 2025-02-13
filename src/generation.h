@@ -39,8 +39,10 @@ void discoverOresInRadius(World world, int x, int y, int radius, int seed){
 void genBaseWorld(World world){
     for(int y = 0; y < world.height; y++){
         for(int x = 0; x < world.width; x++){
-            if(y == 0) worldAt(world, x, y) = ORE_AIR;
-            else if (y == world.height-1) worldAt(world, x, y) = ORE_BEDROCK;
+            if (y == world.height-1) worldAt(world, x, y) = ORE_BEDROCK;
+            else if (x == world.width-1) worldAt(world, x, y) = ORE_BEDROCK;
+            else if (x == 0) worldAt(world, x, y) = ORE_BEDROCK;
+            else if(y == 0) worldAt(world, x, y) = ORE_AIR;
             else worldAt(world, x, y) = ORE_UNDISCOVERED;
         }
     }
