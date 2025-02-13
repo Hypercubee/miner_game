@@ -1,5 +1,6 @@
 #ifndef MINER_GENERATION_H
 #define MINER_GENERATION_H
+#include "world.h"
 #include "ores.h"
 
 #define worldAt(w, x, y) (w).data[(y) * (w).width + (x)]
@@ -23,15 +24,24 @@ Ores oreAt(int x, int y, int seed){
     return ore;
 }
 
-void genOres(World world, int seed){
+void discoverOresInRadius(World world, int x, int y, int radius, int seed){
+    for(int dy = y-radius; dy <= y + radius; dy++) {
+        if(dy < 0 || dy > world.height) continue;
+        for(int dx = x-radius; dx <= x + radius; dx++) {
+            if(dx < 0 || dx > world.width) continue;
+            if(worldAt(world, dx, dy) == ORE_UNDISCOVERED){
+                worldAt(world, dx, dy) = oreAt(dx, dy, seed);
+            }
+        }
+    }
+}
+
+void genBaseWorld(World world){
     for(int y = 0; y < world.height; y++){
         for(int x = 0; x < world.width; x++){
             if(y == 0) worldAt(world, x, y) = ORE_AIR;
             else if (y == world.height-1) worldAt(world, x, y) = ORE_BEDROCK;
-            else {
-                int ore = oreAt(x, y, seed);
-                worldAt(world, x, y) = ore;
-            }
+            else worldAt(world, x, y) = ORE_UNDISCOVERED;
         }
     }
 }

@@ -13,7 +13,7 @@
 
 #include "drawing.h"
 
-World initWorld(int seed){
+World initWorld(){
     World gameWorld = {0};
     gameWorld.width = 512;
     gameWorld.height = 512;
@@ -22,9 +22,7 @@ World initWorld(int seed){
         fprintf(stderr, "failed to allocate memory for world");
         return (World){0};
     }
-
-    genOres(gameWorld, seed);
-
+    genBaseWorld(gameWorld);
     return gameWorld;
 }
 
@@ -42,7 +40,7 @@ void update(World w, Miner *m){
 
 
 int main(void){
-    World gameWorld = initWorld(69);
+    World gameWorld = initWorld();
     Miner miner = {
         .pos = (Vector2) {50, 0},
         .cam = (MinerCamera) {
@@ -50,9 +48,11 @@ int main(void){
             .zoom = 1
         },
         .dir = 0,
-        .max_tier = ORE_COAL
+        .max_tier = ORE_COAL,
+        .oreDiscoverRadius = 4,
+        .seed = 69,
     };
-
+    discoverOresInRadius(gameWorld, miner.pos.x, miner.pos.y, miner.oreDiscoverRadius, miner.seed);
     SetTraceLogLevel(LOG_WARNING);
     InitWindow(800, 600, "miner");
     SetTargetFPS(60);
