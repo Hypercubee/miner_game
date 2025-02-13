@@ -11,6 +11,8 @@ typedef struct{
     MinerCamera cam;
     u8 dir;
     Ores max_tier;
+    int oreDiscoverRadius;
+    int seed;
 } Miner;
 
 
@@ -41,6 +43,7 @@ void minerMove(World w, Miner* m){
             }
         }
     }
+    discoverOresInRadius(w, m->pos.x, m->pos.y, m->oreDiscoverRadius, m->seed);
 }
 
 void cameraMove(Miner* m){
