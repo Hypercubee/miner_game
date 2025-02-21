@@ -24,12 +24,14 @@ Ores oreAt(int x, int y, int seed){
     return ore;
 }
 
-void discoverOresInRadius(World world, int x, int y, int radius, int seed){
+void discoverOresInRadius(World world, int x, int y, float radius, int seed){
+    float radius_squared = (radius + 0.5) * (radius + 0.5);
     for(int dy = y-radius; dy <= y + radius; dy++) {
         if(dy < 0 || dy > world.height) continue;
         for(int dx = x-radius; dx <= x + radius; dx++) {
             if(dx < 0 || dx > world.width) continue;
             if(worldAt(world, dx, dy) == ORE_UNDISCOVERED){
+                if((dx - x) * (dx - x) + (dy - y) * (dy - y) > radius_squared) continue;
                 worldAt(world, dx, dy) = oreAt(dx, dy, seed);
             }
         }
