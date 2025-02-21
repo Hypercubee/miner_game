@@ -40,9 +40,6 @@ void update(World w, Miner *m){
     drawWorld(w, *m);
 }
 
-
-
-
 int main(void){
     World gameWorld = initWorld();
     Miner miner = {
@@ -58,7 +55,10 @@ int main(void){
     };
     discoverOresInRadius(gameWorld, miner.pos.x, miner.pos.y, miner.oreDiscoverRadius, miner.seed);
     SetTraceLogLevel(LOG_WARNING);
+
     InitWindow(800, 600, "miner");
+    loadTextures();
+
     SetTargetFPS(60);
     SetExitKey(0);
     while(!WindowShouldClose()){
@@ -83,8 +83,8 @@ int main(void){
         }
     }
 
+    unloadTextures();
     CloseWindow();
-
     uninitWorld(gameWorld);
     return 0;
 }
