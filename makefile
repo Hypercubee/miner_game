@@ -1,6 +1,6 @@
 
 
-CFLAGS=-fsanitize=undefined -fstack-protector-strong -Wall -Wextra
+CFLAGS=-fsanitize=undefined -fstack-protector-strong -Wall -Wextra -ggdb
 
 SRCFILES=src/*
 
