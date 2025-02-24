@@ -16,11 +16,24 @@ int proceduralRandom(int x, int y, int seed) {
 Ores oreAt(int x, int y, int seed){
     int current = proceduralRandom(x, y, seed) % 100;
     Ores ore = ORE_DIRT;
-    if(y > 1 && y < 25 && current > 97) ore = ORE_COAL;
-    if(y > 25 && y < 40 && current > 97) ore = ORE_IRON;
-    if(y > 40 && y < 60 && current > 97) ore = ORE_COPPER;
-    if(y > 60 && y < 80 && current > 97) ore = ORE_SILVER;
-    if(y > 80 && y < 100 && current > 97) ore = ORE_GOLD;
+    int orePercentages[ORE_UNDISCOVERED + 1] = {0};
+#define ADD_ORE(oreType, percent, minY, maxY) if(y >= (minY) && y <= (maxY)) {orePercentages[(oreType)] += (percent);}
+    ADD_ORE(ORE_COAL, 5, 1, 20);
+    ADD_ORE(ORE_IRON, 5, 20, 40);
+    ADD_ORE(ORE_COPPER, 5, 40, 60);
+    ADD_ORE(ORE_SILVER, 5, 60, 80);
+    ADD_ORE(ORE_GOLD, 5, 80, 100);
+#undef ADD_ORE
+    int totPercent = 0;
+    for(int i = 0; i < ORE_UNDISCOVERED + 1; i++){
+        totPercent += orePercentages[i];
+    }
+    assert(totPercent <= 100);
+    int maxPercent = totPercent;
+    for(int i = 0; i < ORE_UNDISCOVERED + 1; i++){
+        if(maxPercent > current) ore = i;
+        maxPercent -= orePercentages[i];
+    }
     return ore;
 }
 
@@ -50,33 +63,4 @@ void genBaseWorld(World world){
     }
 }
 
-/*
-void genOre(World w, int ymin, int ymax, int percent, u8 material){
-    for(int y = ymin; y < ymax || y < w.height; y++){
-        for(int x = 0; x < w.width; x++){
-            int rand = GetRandomValue(0, 100);
-            if(y > ymin && y < ymax && rand > 100-percent) worldAt(w, x, y) = material;
-        }
-    }
-}
-
-void genOres(World w){
-    for(int y = 0; y < w.height; y++){
-        for(int x = 0; x < w.width; x++){
-            if(y == 0) worldAt(w, x, y) = ORE_AIR;
-            else if (y == w.height-1) worldAt(w, x, y) = ORE_BEDROCK;
-            else worldAt(w, x, y) = ORE_DIRT;
-        }
-    }
-    genOre(w, 0, 20, 5, ORE_COAL);
-    genOre(w, 20, 30, 3, ORE_COAL);
-    genOre(w, 20, 30, 3, ORE_IRON);
-    genOre(w, 30, 50, 5, ORE_IRON);
-    genOre(w, 50, 60, 3, ORE_IRON);
-    genOre(w, 50, 60, 3, ORE_COPPER);
-    genOre(w, 60, 80, 5, ORE_COPPER);
-    genOre(w, 80, 100, 5, ORE_SILVER);
-    genOre(w, 100, 120, 5, ORE_GOLD);
-}
-*/
 #endif // MINER_GENERATION_H
