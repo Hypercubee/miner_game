@@ -33,11 +33,20 @@ void uninitWorld(World world){
     free(world.data);
 }
 
+void drawUI(Miner *m){
+    char buff[32] = {0};
+    sprintf(buff, "DEPTH: %dm", (int) (5 * m->pos.y));
+    DrawText(buff, 20, 20, 20, WHITE);
+    sprintf(buff, "%dFPS", GetFPS());
+    DrawText(buff, 20, 50, 20, WHITE);
+}
+
 void update(World w, Miner *m){
     minerMove(w, m);
     cameraMove(m);
     updateZoom(m);
     drawWorld(w, *m);
+    drawUI(m);
 }
 
 int main(void){
@@ -66,9 +75,6 @@ int main(void){
         ClearBackground(BLACK);
 
         update(gameWorld, &miner);
-
-        DrawLine(0, 0, 800, 600, WHITE);
-        DrawLine(800, 0, 0, 600, WHITE);
         EndDrawing();
 
         if(IsKeyPressed(KEY_K)){
