@@ -65,6 +65,7 @@ int main(void){
     discoverOresInRadius(gameWorld, miner.pos.x, miner.pos.y, miner.oreDiscoverRadius, miner.seed);
     SetTraceLogLevel(LOG_WARNING);
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 600, "miner");
     loadTextures();
 
