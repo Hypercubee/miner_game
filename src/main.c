@@ -16,6 +16,13 @@
 #include "drawing.h"
 #include "saves.h"
 
+typedef enum{
+    MENU_START,
+    MENU_GAME
+} Menu;
+
+Menu menu = MENU_START;
+
 World initWorld(){
     World gameWorld = {0};
     gameWorld.width = 512;
@@ -49,6 +56,40 @@ void update(World w, Miner *m){
     drawUI(m);
 }
 
+
+void runGame(World gameWorld, Miner *miner){
+
+    update(gameWorld, miner);
+
+    if(IsKeyPressed(KEY_K)){
+        printf("world saved\n");
+        saveWorld("saves/first.save", gameWorld, *miner);
+    }
+
+    if(IsKeyPressed(KEY_L)){
+        printf("world loaded\n");
+        uninitWorld(gameWorld);
+        loadWorld("saves/first.save", &gameWorld, miner);
+    }
+}
+
+void runStartMenu(World world){
+    const int WINDOW_WIDTH = GetRenderWidth();
+    const int WINDOW_HEIGHT = GetRenderHeight();
+    char buff[32] = {0};
+    sprintf(buff, "%dFPS", GetFPS());
+    DrawText(buff, 20, 20, 20, WHITE);
+    const int size = 100;
+    const int charCount = 5;
+    DrawText("Miner", WINDOW_WIDTH / 2 - charCount * size / 4, 40, size, BROWN);
+
+    DrawText("Press Enter to play", WINDOW_WIDTH / 2 - 19 * 50 / 4, 400, 50, GRAY);
+    if(IsKeyPressed(KEY_ENTER)){
+        menu = MENU_GAME;
+    }
+
+}
+
 int main(void){
     World gameWorld = initWorld();
     Miner miner = {
@@ -74,20 +115,17 @@ int main(void){
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
-
-        update(gameWorld, &miner);
+        switch(menu){
+        case MENU_START:
+            runStartMenu(gameWorld);
+            break;
+        case MENU_GAME:
+            runGame(gameWorld, &miner);
+            break;
+        default:
+            assert(0 && "menu not implemented");
+        }
         EndDrawing();
-
-        if(IsKeyPressed(KEY_K)){
-            printf("world saved\n");
-            saveWorld("saves/first.save", gameWorld, miner);
-        }
-
-        if(IsKeyPressed(KEY_L)){
-            printf("world loaded\n");
-            uninitWorld(gameWorld);
-            loadWorld("saves/first.save", &gameWorld, &miner);
-        }
     }
 
     unloadTextures();
