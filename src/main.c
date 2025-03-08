@@ -56,18 +56,18 @@ void update(World w, Miner *m){
     drawUI(m);
 }
 
-void runGame(World gameWorld, Miner *miner){
-    update(gameWorld, miner);
+void runGame(World *gameWorld, Miner *miner){
+    update(*gameWorld, miner);
 
     if(IsKeyPressed(KEY_K)){
         printf("world saved\n");
-        saveWorld("saves/first.save", gameWorld, *miner);
+        saveWorld("saves/first.save", *gameWorld, *miner);
     }
 
     if(IsKeyPressed(KEY_L)){
         printf("world loaded\n");
-        uninitWorld(gameWorld);
-        loadWorld("saves/first.save", &gameWorld, miner);
+        uninitWorld(*gameWorld);
+        loadWorld("saves/first.save", gameWorld, miner);
     }
 }
 
@@ -119,7 +119,7 @@ int main(void){
             runStartMenu(gameWorld);
             break;
         case MENU_GAME:
-            runGame(gameWorld, &miner);
+            runGame(&gameWorld, &miner);
             break;
         default:
             assert(0 && "menu not implemented");
