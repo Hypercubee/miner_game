@@ -56,9 +56,7 @@ void update(World w, Miner *m){
     drawUI(m);
 }
 
-
 void runGame(World gameWorld, Miner *miner){
-
     update(gameWorld, miner);
 
     if(IsKeyPressed(KEY_K)){
@@ -99,7 +97,8 @@ int main(void){
             .zoom = 1
         },
         .dir = 0,
-        .max_tier = ORE_COAL,
+        .max_tier = ORE_GOLD,
+        .baseDrillSpeed = 0.2,
         .oreDiscoverRadius = 4,
         .seed = 69,
     };

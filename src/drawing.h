@@ -6,6 +6,10 @@ void getPosOnScreen(int windowWidth, int windowHeight, int cellsize, Vector2 cam
     *outy = (cellsize*(2*worldy - 1 - 2*cam.y) + windowHeight)/2;
 }
 
+void getPosOnScreenf(int windowWidth, int windowHeight, int cellsize, Vector2 cam, float worldx, float worldy, int* outx, int* outy){
+    *outx = ((float) cellsize*(2.0*worldx - 1 - 2*cam.x) + windowWidth)/2;
+    *outy = ((float) cellsize*(2.0*worldy - 1 - 2*cam.y) + windowHeight)/2;
+}
 
 Texture2D textures[32];
 int loadedTextureCount = 0;
@@ -82,7 +86,7 @@ void drawTerrain(World world, int windowWidth, int windowHeight, Vector2 cam, in
 
 void drawMiner(int windowWidth, int windowHeight, Miner m, int cellsize){
     int posx; int posy;
-    getPosOnScreen(windowWidth, windowHeight, cellsize, m.cam.pos, m.pos.x, m.pos.y, &posx, &posy);
+    getPosOnScreenf(windowWidth, windowHeight, cellsize, m.cam.pos, m.pos.x, m.pos.y, &posx, &posy);
     DrawRectangle(posx+cellsize*0.2, posy+cellsize*0.2, cellsize*0.6, cellsize*0.6, WHITE);
 }
 
