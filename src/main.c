@@ -74,14 +74,17 @@ void runGame(World *gameWorld, Miner *miner){
 void runStartMenu(World world){
     const int WINDOW_WIDTH = GetRenderWidth();
     const int WINDOW_HEIGHT = GetRenderHeight();
-    char buff[32] = {0};
-    sprintf(buff, "%dFPS", GetFPS());
-    DrawText(buff, 20, 20, 20, WHITE);
-    const int size = 100;
-    const int charCount = 5;
-    DrawText("Miner", WINDOW_WIDTH / 2 - charCount * size / 4, 40, size, BROWN);
+    DrawText(TextFormat("%dFPS", GetFPS()), 20, 20, 20, WHITE);
+    const int size = WINDOW_HEIGHT / 5;
+    const char* name = "Miner";
+    const char* play = "Press Enter to play";
 
-    DrawText("Press Enter to play", WINDOW_WIDTH / 2 - 19 * 50 / 4, 400, 50, GRAY);
+    int nameWidth = MeasureText(name, size);
+    int playWidth = MeasureText(play, size / 2);
+
+    DrawText(name, WINDOW_WIDTH / 2 - nameWidth / 2, size, size, BROWN);
+
+    DrawText(play, WINDOW_WIDTH / 2 - playWidth / 2, size * 4, size / 2, GRAY);
     if(IsKeyPressed(KEY_ENTER)){
         menu = MENU_GAME;
     }
