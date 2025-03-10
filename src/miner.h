@@ -39,6 +39,9 @@ void minerMove(World w, Miner* m){
         m->pos.y = lerp(posBefore.y, posAfter.y, t);
         m->cam.pos.x = lerp(posBefore.x, posAfter.x, t) + camOffset.x;
         m->cam.pos.y = lerp(posBefore.y, posAfter.y, t) + camOffset.y;
+        if(t >= 0.5f) {
+            worldAt(w, (int) posAfter.x, (int) posAfter.y) = ORE_AIR;
+        }
         if(t >= 1.0f) {
             isMinerMoving = 0;
             minedTime = 0.0f;
@@ -65,7 +68,6 @@ void minerMove(World w, Miner* m){
                 posBefore = m->pos;
                 posAfter.x = m->pos.x + dirx;
                 posAfter.y = m->pos.y + diry;
-                worldAt(w, (int)m->pos.x + dirx, (int)m->pos.y + diry) = ORE_AIR;
                 if(ore > ORE_DIRT){
                     printf("pos x: %d, pos y: %d, mined: %d\n", (int)m->pos.x + dirx, (int)m->pos.y + diry, (int) ore);
                 }
