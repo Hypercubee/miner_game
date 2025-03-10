@@ -89,6 +89,11 @@ void cameraMove(Miner* m){
     if(IsKeyDown(KEY_RIGHT)){
         m->cam.pos.x += speed;
     }
+    if(IsKeyDown(KEY_C)){
+        m->cam.pos.x = m->pos.x;
+        m->cam.pos.y = m->pos.y;
+    }
+
 }
 
 void updateZoom(Miner* m){
