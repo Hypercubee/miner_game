@@ -41,11 +41,9 @@ void uninitWorld(World world){
 }
 
 void drawUI(Miner *m){
-    char buff[32] = {0};
-    sprintf(buff, "DEPTH: %dm", (int) (5 * m->pos.y));
-    DrawText(buff, 20, 20, 20, WHITE);
-    sprintf(buff, "%dFPS", GetFPS());
-    DrawText(buff, 20, 50, 20, WHITE);
+    DrawText(TextFormat("DEPTH: %dm", (int) (5 * m->pos.y)), 20, 20, 20, WHITE);
+    DrawText(TextFormat("%dFPS", GetFPS()), 20, 50, 20, WHITE);
+
 }
 
 void update(World w, Miner *m){
