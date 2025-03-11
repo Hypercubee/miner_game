@@ -2,25 +2,38 @@
 
 ## build
 ```sh
-make
+cc nob.c -o nob
+./nob
 ```
+
 ## run
 ```sh
-./main
+./build/main
 ```
+
 ## controls
 ### miner movement
 ```
     w
  a  s  d
 ```
+
 ### camera movement
 ```
     ↑
  ←  ↓  →
+ 
+reset camera - r
 ```
+
 ### camera zoom 
 ```
 numpad + 
 numpad -
+```
+
+### save & load
+```
+save - k
+load - l
 ```

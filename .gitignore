@@ -1,5 +1,6 @@
 TAGS
-main
+build/
+nob
 *.o
 *.exe
 *~

@@ -4,7 +4,7 @@
 #include <errno.h>
 #include <string.h>
 //#include <raylib.h>
-#include "../lib/raylib.h" // for autocomplete to recognise the .h
+#include "../include/raylib.h" // for autocomplete to recognise the .h
 
 #include "int_types.h"
 
@@ -69,7 +69,7 @@ void runGame(World *gameWorld, Miner *miner){
     }
 }
 
-void runStartMenu(World world){
+void runStartMenu(){
     const int WINDOW_WIDTH = GetRenderWidth();
     const int WINDOW_HEIGHT = GetRenderHeight();
     DrawText(TextFormat("%dFPS", GetFPS()), 20, 20, 20, WHITE);
@@ -117,7 +117,7 @@ int main(void){
         ClearBackground(BLACK);
         switch(menu){
         case MENU_START:
-            runStartMenu(gameWorld);
+            runStartMenu();
             break;
         case MENU_GAME:
             runGame(&gameWorld, &miner);
