@@ -1,6 +1,7 @@
 TAGS
 build/
 nob
+nob.old
 *.o
 *.exe
 *~

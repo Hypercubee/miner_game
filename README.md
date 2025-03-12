@@ -3,7 +3,7 @@
 ## build
 ```sh
 cc nob.c -o nob
-./nob
+./nob <linux|windows> [run]
 ```
 
 ## run
