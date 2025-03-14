@@ -45,6 +45,7 @@ Color getOreColor(Ores ore){
         break;
     default:
         assert(0 && "ores color not implemented");
+        return (Color){0};
     }
 }
 

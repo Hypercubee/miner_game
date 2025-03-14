@@ -59,6 +59,7 @@ int getOreTextureIndex(Ores ore){
         return -2;
     default:
         assert(0 && "ores texture not implemented");
+        return -1;
     }
 }
 

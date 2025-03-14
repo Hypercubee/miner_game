@@ -23,6 +23,14 @@ bool build_linux() {
     return true;
 }
 
+bool build_windows() {
+    nob_cmd_append(&cmd, "x86_64-w64-mingw32-gcc", "-o", BUILD_FOLDER"main.exe", SRC_FOLDER"main.c");
+    nob_cmd_append(&cmd, "-L./lib/win", "-lraylib", "-lm", "-I./include");
+    nob_cmd_append(&cmd, "-Wall", "-Wextra", "-lgdi32", "-lwinmm", "-ggdb");
+    if (!nob_cmd_run_sync_and_reset(&cmd)) return false;
+    return true;
+}
+
 int main(int argc, char **argv){
     NOB_GO_REBUILD_URSELF(argc, argv);
     int argument_count = argc;
@@ -38,10 +46,9 @@ int main(int argc, char **argv){
     
     const char *arg1 = nob_shift(arguments, argument_count);
     if(strcmp("windows", arg1) == 0) {
-        fprintf(stderr, "windows platform not implemented");
-        return 1;
+        TRY(build_windows, stderr, "could not build windows executable\n");
     } else if(strcmp("linux", arg1) == 0) {
-        TRY(build_linux, stderr, "could not build linux executable");
+        TRY(build_linux, stderr, "could not build linux executable\n");
     } else {
         fprintf(stderr, "unknown platform");
         print_usage(stderr, program_name);
@@ -52,10 +59,13 @@ int main(int argc, char **argv){
     const char *arg2 = nob_shift(arguments, argument_count);
     
     if(strcmp("run", arg2) == 0){
-        nob_cmd_append(&cmd, "./build/main");
+        if(strcmp("linux", arg1) == 0){
+            nob_cmd_append(&cmd, "./build/main");
+        } else {
+            nob_cmd_append(&cmd, "./build/main.exe");
+        }
         if (!nob_cmd_run_sync_and_reset(&cmd)) return false;
     }
-    
-    
+
     return 0;
 }
