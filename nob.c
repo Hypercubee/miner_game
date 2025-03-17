@@ -11,7 +11,7 @@ void print_usage(FILE* stream, const char* program_name) {
     fprintf(stream, "usage: %s <platform> [run]\n", program_name);
 }
 
-#define TRY(fun, stream, msg) if(!fun()) {fprintf(stream, msg);}
+#define TRY(fun, stream, msg) if(!fun()) { fprintf(stream, msg); return 1; }
 
 Nob_Cmd cmd = {0};
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv){
     } else if(strcmp("linux", arg1) == 0) {
         TRY(build_linux, stderr, "could not build linux executable\n");
     } else {
-        fprintf(stderr, "unknown platform");
+        fprintf(stderr, "unknown platform\n");
         print_usage(stderr, program_name);
         return 1;
     }
