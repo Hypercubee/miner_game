@@ -26,6 +26,33 @@ float lerp(float a, float b, float t){
     return a + (b - a) * t;
 }
 
+float getOreDrillTime(Ores ore){
+    switch(ore){
+    case ORE_AIR:
+        return 0.1;
+    case ORE_DIRT:
+        return 0.2;
+    case ORE_COAL:
+        return 0.4;
+    case ORE_IRON:
+        return 0.5;
+    case ORE_COPPER:
+        return 0.8;
+    case ORE_SILVER:
+        return 1.0;
+    case ORE_GOLD:
+        return 1.2;
+    case ORE_BEDROCK:
+        return 69.69;
+    case ORE_UNDISCOVERED:
+        return 69.69;
+    default:
+        assert(0 && "ores color not implemented");
+        return 1.0;
+    }
+}
+
+
 void minerMove(World w, Miner* m){
     if(isMinerMoving) {
         Vector2 camOffset = {
@@ -64,7 +91,7 @@ void minerMove(World w, Miner* m){
             u8 ore = worldAt(w, (int)m->pos.x+dirx, (int)m->pos.y+diry);
             if(ore <= m->max_tier){
                 isMinerMoving = 1;
-                drillTime = m->baseDrillSpeed * (1+ore);
+                drillTime = m->baseDrillSpeed * getOreDrillTime(ore);
                 posBefore = m->pos;
                 posAfter.x = m->pos.x + dirx;
                 posAfter.y = m->pos.y + diry;

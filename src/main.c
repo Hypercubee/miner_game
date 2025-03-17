@@ -99,7 +99,7 @@ int main(void){
         },
         .dir = 0,
         .max_tier = ORE_GOLD,
-        .baseDrillSpeed = 0.2,
+        .baseDrillSpeed = 1.0,
         .oreDiscoverRadius = 4,
         .seed = 69,
     };
